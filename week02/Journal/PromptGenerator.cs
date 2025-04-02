@@ -78,3 +78,4 @@ class Program
 # 4. Added validation when loading entries to ensure proper formatting
 # 5. Used proper encapsulation with private fields and public properties
 */
+       

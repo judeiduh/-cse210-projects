@@ -1,56 +1,32 @@
-using System;
-
-class Program
-{
-    static void Main()
-    {
-        Journal journal = new Journal();
-        string filename = "journal.txt";
-
-        while (true)
-        {
-            Console.WriteLine("\nJournal Menu:");
-            Console.WriteLine("1. Write a new entry");
-            Console.WriteLine("2. Display journal");
-            Console.WriteLine("3. Save journal");
-            Console.WriteLine("4. Load journal");
-            Console.WriteLine("5. Exit");
-            Console.Write("Choose an option: ");
-
-            string choice = Console.ReadLine();
-            Console.WriteLine();
-
-            switch (choice)
-            {
-                case "1":
-                    string prompt = PromptGenerator.GetRandomPrompt();
-                    Console.WriteLine($"Prompt: {prompt}");
-                    Console.Write("Your response: ");
-                    string text = Console.ReadLine();
-                    journal.AddEntry(new Entry(prompt, text));
-                    break;
-
-                case "2":
-                    journal.DisplayEntries();
-                    break;
-
-                case "3":
-                    journal.SaveToFile(filename);
-                    break;
-
-                case "4":
-                    journal.LoadFromFile(filename);
-                    break;
-
-                case "5":
-                    Console.WriteLine("Goodbye!");
-                    return;
-
-                default:
-                    Console.WriteLine("Invalid choice. Please try again.");
-                    break;
-            }
-        }
-    }
-
-
+ class Journal:
+    def __init__(self):
+        self.entries = []
+    
+    def add_entry(self, entry):
+        """Adds a journal entry."""
+        self.entries.append(entry)
+    
+    def get_entries(self):
+        """Returns all journal entries."""
+        return self.entries
+    
+    def display_entries(self):
+        """Displays all entries along with the date and prompt."""
+        for entry in self.entries:
+            print(f"Date: {entry.date}\nPrompt: {entry.prompt}\nEntry: {entry.text}\n")
+    
+    def save(self, filename):
+        """Saves journal entries to a file."""
+        with open(filename, 'w') as file:
+            for entry in self.entries:
+                file.write(f"{entry.date},{entry.prompt},{entry.text}\n")
+    
+    def load(self, filename):
+        """Loads journal entries from a file."""
+        try:
+            with open(filename, 'r') as file:
+                for line in file:
+                    date, prompt, text = line.strip().split(',', 2)
+                    self.add_entry(Entry(date, prompt, text))
+        except FileNotFoundError:
+            print("File not found. Starting with an empty journal.")
